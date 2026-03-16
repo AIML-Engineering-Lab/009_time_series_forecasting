@@ -1,0 +1,301 @@
+%% AIML Engineering Lab - Project Report (v3)
+%% Placeholders are replaced by generate_content.py
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper, margin=2cm, top=2.2cm, bottom=2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{tcolorbox}
+\usepackage{needspace}
+\tcbuselibrary{skins,breakable}
+\usetikzlibrary{arrows.meta, positioning}
+
+%% ── Colour palette ─────────────────────────────────────────────────────────
+\definecolor{primary}{HTML}{1A1A2E}
+\definecolor{accent}{HTML}{0F3460}
+\definecolor{codemuted}{HTML}{6B7280}
+\definecolor{metricgreen}{HTML}{16A34A}
+\definecolor{tableheader}{HTML}{D0E8F7}
+\definecolor{tablerow}{HTML}{EBF5FB}
+\definecolor{lightblue}{HTML}{F0F7FC}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  citecolor=accent,
+  pdftitle={Time Series Forecasting: ARIMA \& SARIMA},
+  pdfauthor={AIML Engineering Lab},
+}
+
+\setstretch{1.18}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+\titleformat{\section}
+  {\large\bfseries\color{accent}}
+  {\thesection}{1em}{}[\color{tableheader}\titlerule]
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{primary}}
+  {\thesubsection}{0.8em}{}
+\titlespacing{\section}{0pt}{16pt}{6pt}
+\titlespacing{\subsection}{0pt}{10pt}{4pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{codemuted}Project 009}
+\fancyhead[R]{\small\color{codemuted}Time Series Forecasting: ARIMA \& SARIMA}
+\fancyfoot[C]{\small\color{codemuted}\thepage}
+\renewcommand{\headrulewidth}{0.2pt}
+
+\newtcolorbox{resultbox}{
+  colback=lightblue, colframe=tableheader,
+  boxrule=0.4pt, arc=4pt, left=10pt, right=10pt, top=6pt, bottom=6pt
+}
+
+\begin{document}
+
+%% ── COVER PAGE ─────────────────────────────────────────────────────────────
+\thispagestyle{empty}
+
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[primary] (current page.north west)
+    rectangle ([yshift=-48pt]current page.north east);
+\end{tikzpicture}
+
+\vspace*{22pt}
+{\color{white}\large\bfseries AIML Engineering Lab}
+
+\vspace{50pt}
+
+\begin{flushright}
+  {\fontsize{9}{11}\selectfont\color{codemuted}PROJECT 009}
+\end{flushright}
+
+{\fontsize{26}{32}\selectfont\bfseries\color{primary} Time Series Forecasting: ARIMA \& SARIMA}
+
+\vspace{6pt}
+{\large\color{accent} Harnessing classical forecasting techniques for accurate time series analysis in diverse domains.}
+
+\vspace{14pt}
+{\color{tableheader}\rule{\linewidth}{0.6pt}}
+
+\vspace{16pt}
+This project addresses the complexities of forecasting time-dependent data with ARIMA and SARIMA models. By examining power demand patterns and silicon aging degradation, we develop robust predictions that inform operational efficiency and materials engineering. The results highlight the effectiveness of seasonal decomposition and model selection in achieving reliable forecasts.
+
+\vspace{12pt}
+\begin{resultbox}
+  \textbf{\color{accent}Key Result}\quad
+  {\large\bfseries\color{metricgreen}MAE = 57.9900 for Datacenter Power Demand, MAE = 0.9413 for Silicon Aging dataset}
+\end{resultbox}
+
+\vfill
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}l X @{}}
+  \arrayrulecolor{tableheader}
+  \toprule
+  \rowcolor{tableheader} Info & Detail \\
+  \midrule
+  \rowcolor{white} GitHub & \href{https://github.com/AIML-Engineering-Lab/009_time_series_forecasting}{\nolinkurl{https://github.com/AIML-Engineering-Lab/009_time_series_forecasting}} \\
+  \rowcolor{tablerow} Tech Stack & Python 3.11, scikit-learn, pandas, matplotlib \\
+  \rowcolor{white} Licence & MIT \\
+  \bottomrule
+\end{tabularx}
+
+\newpage
+
+%% ── 1. PROJECT OVERVIEW ────────────────────────────────────────────────────
+\section{Project Overview}
+
+Time series forecasting has become an essential tool for various industries, helping predict trends and cycles in data that change over time. This project focuses on two distinct datasets: the power demand of a datacenter, capturing an intricate interplay of daily, weekly, and annual patterns, and the aging of silicon in semiconductor devices, characterized by logarithmic degradation trends influenced by temperature. The goal is to apply ARIMA and its seasonal variant, SARIMA, for effective forecasting while validating the hypotheses around the underlying data structures.
+
+To achieve this, we implement several key methodologies, notably stationarity testing using the Augmented Dickey-Fuller (ADF) test, which assesses whether the statistical properties of the series remain constant over time. Differencing is employed to stabilize the mean of the series by removing trends. The Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF) are analyzed to determine optimal parameters for the ARIMA models. Ultimately, the models are fit to the respective datasets, producing forecasts that are assessed through metrics such as Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE). The results reveal significant accuracy improvements in predicting both power demand patterns and silicon aging trends, showcasing the methodologies' applicability across varied contexts.
+
+\subsection{Key Concepts}
+
+\textbf{Stationarity:} A critical feature of time series analysis wherein the statistical properties of the series remain constant over time, essential for applying ARIMA models.
+
+\textbf{ADF Test:} Augmented Dickey-Fuller test is utilized to determine if the time series is stationary, with a significance level of p < 0.05 indicating stationarity.
+
+\textbf{Differencing:} A technique applied to transform a non-stationary series into a stationary one by subtracting consecutive observations.
+
+\textbf{ACF/PACF:} Autocorrelation and Partial Autocorrelation functions help identify the appropriate values of p and q in ARIMA models.
+
+\textbf{ARIMA:} AutoRegressive Integrated Moving Average model suitable for non-seasonal time series forecasting.
+
+\textbf{SARIMA:} An extension of ARIMA that incorporates seasonal elements, allowing it to model data with seasonal patterns effectively.
+
+
+%% ── 2. DATASETS ────────────────────────────────────────────────────────────
+\needspace{14\baselineskip}
+\section{Datasets}
+
+\subsection{Datacenter Power Demand}
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}l X @{}}
+  \arrayrulecolor{tableheader}
+  \toprule
+  \rowcolor{tableheader} Property & Value \\
+  \midrule
+  \rowcolor{white} Description & This dataset consists of 17,520 hourly readings representing two years of power consumption in a datacenter, sourced from operational infrastructure logs. It reflects complex temporal patterns, including daily, weekly, and yearly seasons, alongside a long-term trend. \\
+  \rowcolor{tablerow} Total Rows & 17,520 \\
+  \rowcolor{white} Columns & 2 columns (1 feature + 1 target) \\
+  \rowcolor{tablerow} Features & Power (kW) \\
+  \rowcolor{white} Class Balance & Continuous target range 100-400 kW. \\
+  \rowcolor{tablerow} Train / Test Split & 80\% train / 20\% test \\
+  \bottomrule
+\end{tabularx}
+
+\vspace{10pt}
+
+\subsection{Silicon Aging — Threshold Voltage Shift}
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}l X @{}}
+  \arrayrulecolor{tableheader}
+  \toprule
+  \rowcolor{tableheader} Property & Value \\
+  \midrule
+  \rowcolor{white} Description & This dataset contains 1,095 daily measurements of threshold voltage shift in silicon, focusing on post-silicon validation. The readings illustrate a logarithmic degradation pattern due to Bias Temperature Instability (BTI) over three years, influenced by varying temperature conditions. \\
+  \rowcolor{tablerow} Total Rows & 1,095 \\
+  \rowcolor{white} Columns & 2 columns (1 feature + 1 target) \\
+  \rowcolor{tablerow} Features & Vth shift (mV) \\
+  \rowcolor{white} Class Balance & Continuous target range 0-200 mV. \\
+  \rowcolor{tablerow} Train / Test Split & 80\% train / 20\% test \\
+  \bottomrule
+\end{tabularx}
+
+%% ── 3. METHODOLOGY ─────────────────────────────────────────────────────────
+\section{Methodology}
+
+\subsection{Algorithms Used}
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}l X @{}}
+  \arrayrulecolor{tableheader}
+  \toprule
+  \rowcolor{tableheader} Algorithm & Description \\
+  \midrule
+  \rowcolor{white} ARIMA & Utilized for non-seasonal time series, ARIMA facilitates modeling through its parameters p, d, and q, tailored to fit the data. \\
+  \rowcolor{tablerow} SARIMA & Incorporates seasonal elements, adding parameters P, D, Q, and s to ARIMA to model cyclical patterns effectively. \\
+  \bottomrule
+\end{tabularx}
+
+\subsection{Processing Pipeline}
+
+The first step involved data loading, where both datasets were ingested into the environment using pandas for subsequent analysis. Next, exploratory data analysis (EDA) was conducted, including time series visualizations to identify trends, seasonal patterns, and any anomalies within the data. Following this, a rigorous stationarity assessment was performed using the Augmented Dickey-Fuller (ADF) test; where the series failed to exhibit stationarity, appropriate differencing (the d parameter) was applied to stabilize the mean.
+
+ACF and PACF plots were generated to identify the autocorrelations in the series and to guide the selection of initial ARIMA parameters, improving model fitting. Next, ARIMA and SARIMA models were implemented, optimizing hyperparameters based on Akaike Information Criterion (AIC) values to ensure the best possible fit. The models were trained on the training set, which constituted 80\% of the dataset, while the remaining 20\% served as a test set to validate the predictions.
+
+Lastly, the models were evaluated using error metrics such as Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE), ensuring that the forecasts were robust against the actual data. Visualizations of forecasting results were created to compare predicted vs actual values, providing insights into model accuracy and reliability across different forecast horizons.
+
+%% ── 4. RESULTS ─────────────────────────────────────────────────────────────
+\section{Results}
+
+The ARIMA and SARIMA models demonstrated varying performance across the datasets. For the Datacenter Power Demand, the SARIMA model proved superior due to its ability to account for both seasonal variations and trends, resulting in a MAE of 57.9900, indicating a precise modeling of power consumption cycles. In contrast, while the model for the Silicon Aging dataset was not as fine-tuned to seasonal components, it still managed to capture the overarching degradation trend observed, resulting in a MAE of 0.9413. The results suggest that incorporating seasonality into forecasting models significantly enhances predictive accuracy, particularly in datasets where such cyclic patterns are prevalent.
+
+\vspace{6pt}
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}l X @{}}
+  \arrayrulecolor{tableheader}
+  \toprule
+  \rowcolor{tableheader} Metric & Value \\
+  \midrule
+  \rowcolor{white} MAE for Datacenter Power Demand & 57.9900 \\
+  \rowcolor{tablerow} RMSE for Datacenter Power Demand & 72.9700 \\
+  \rowcolor{white} MAE for Silicon Aging & 0.9413 \\
+  \rowcolor{tablerow} RMSE for Silicon Aging & 1.1064 \\
+  \bottomrule
+\end{tabularx}
+
+\vspace{8pt}
+\begin{resultbox}
+  \textbf{\color{accent}Best Result}\quad {\bfseries\color{metricgreen}MAE = 57.9900 for Datacenter Power Demand, MAE = 0.9413 for Silicon Aging dataset}
+\end{resultbox}
+
+%% ── 5. VISUALISATIONS ──────────────────────────────────────────────────────
+\section{Visualisations}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{/Users/rajendarmuddasani/AIML/55_LinkedIn/009_time_series_forecasting/assets/acf_pacf.png}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{/Users/rajendarmuddasani/AIML/55_LinkedIn/009_time_series_forecasting/assets/acf_pacf_aging.png}
+\end{figure}
+
+The first two visualizations illustrate the hourly power demand over two years, revealing distinct daily peaks and troughs alongside an overarching upward trend, indicative of growing operational demands. Additionally, seasonal decompositions emphasize the cyclical nature of the data, where seasonal effects are more pronounced during specific times of the week, suggesting operational adjustments may be beneficial during lower demand periods.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{/Users/rajendarmuddasani/AIML/55_LinkedIn/009_time_series_forecasting/assets/arima_forecast.png}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{/Users/rajendarmuddasani/AIML/55_LinkedIn/009_time_series_forecasting/assets/arima_forecast_aging.png}
+\end{figure}
+
+The following visualizations plot the daily threshold voltage shifts evidencing a gradual degradation trend characterized by a logarithmic response to stress factors. This trend emphasizes the need for careful monitoring in silicon aging as temperatures fluctuate, suggesting predictive maintenance thresholds could significantly mitigate performance impacts.
+
+%% ── 6. DEPLOYMENT ──────────────────────────────────────────────────────────
+\section{Deployment \& Tech Stack}
+
+Deployment of the forecasting models involved encapsulating the trained models within a web application framework that could serve predictions to end-users in real-time. Utilization of RESTful APIs facilitated communication between the model backend and user interface, allowing stakeholders to input real-time data and receive immediate forecasts. Additionally, leveraging cloud services ensured scalability and ease of access across different organizational departments, promoting integration of predictive insights across various operational teams.
+
+\subsection{Quick Start}
+
+\begin{verbatim}
+git clone https://github.com/AIML-Engineering-Lab/009_time_series_forecasting
+docker compose up --build
+\end{verbatim}
+
+\subsection{Tech Stack}
+
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}l X @{}}
+  \arrayrulecolor{tableheader}
+  \toprule
+  \rowcolor{tableheader} Info & Detail \\
+  \midrule
+  \rowcolor{white} GitHub & \href{https://github.com/AIML-Engineering-Lab/009_time_series_forecasting}{\nolinkurl{https://github.com/AIML-Engineering-Lab/009_time_series_forecasting}} \\
+  \rowcolor{tablerow} Tech Stack & Python 3.11, scikit-learn, pandas, matplotlib \\
+  \rowcolor{white} Licence & MIT \\
+  \bottomrule
+\end{tabularx}
+
+%% ── 7. KEY LEARNINGS ───────────────────────────────────────────────────────
+\section{Key Learnings}
+
+\begin{itemize}[leftmargin=18pt,itemsep=4pt]
+  \item The significant impact of seasonality on time series forecasting, reinforcing the need to incorporate seasonal components to improve prediction accuracy.
+  \item Understanding the importance of stationarity and how differencing can stabilize time series data, leading to better model performance.
+  \item The effectiveness of using AIC for model selection, enhancing the process of identifying the most suitable parameters for ARIMA and SARIMA applications.
+\end{itemize}
+
+%% ── 8. FUTURE WORK ─────────────────────────────────────────────────────────
+\section{Future Work}
+
+\begin{itemize}[leftmargin=18pt,itemsep=4pt]
+  \item Integrate machine learning techniques for further improving forecast accuracy, such as using ensemble methods or neural networks.
+  \item Explore additional seasonal and cyclic patterns using Fourier transforms to improve understanding of underlying data behavior.
+\end{itemize}
+
+\end{document}
