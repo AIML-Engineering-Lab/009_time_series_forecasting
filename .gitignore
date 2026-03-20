@@ -32,13 +32,13 @@ data/raw/
 Thumbs.db
 
 # Model artifacts
-*.pkl
-*.joblib
 *.h5
 *.pt
 *.pth
-models/
 
 # Logs
 *.log
 logs/
+
+# Large ARIMA model (>100MB, regenerate with: python src/train.py)
+models/arima_datacenter.pkl
